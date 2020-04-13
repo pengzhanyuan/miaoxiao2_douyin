@@ -53,12 +53,14 @@ class Insert_gift:
 if __name__ == '__main__':
     today = datetime.date.today()
     yesterday = today + datetime.timedelta(days=-1)
-    fan_name=input('粉丝姓名: ')
-    sound_wave=input('音浪数:')
-    idol=input('偶像(default:喵小兔漫画-(画师七七)):')
-    gift_time=input('送礼日期(default:{}):'.format(yesterday))
-    reporter=input('登记人(default:包包(漠南)):')
 
-    runsql=Insert_gift()
-    error_code,id = runsql.insert_gift(fan_name,sound_wave)
-    print(id)
+    for i in range(5):
+        fan_name=input('粉丝姓名: ')
+        sound_wave=input('音浪数:')
+        idol=input('偶像(default:喵小兔漫画-(画师七七)):')
+        gift_time=input('送礼日期(default:{}):'.format(yesterday))
+        reporter=input('登记人(default:包包(漠南)):')
+
+        runsql=Insert_gift()
+        error_code,id = runsql.insert_gift(fan_name,sound_wave)
+        print(id)

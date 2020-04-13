@@ -191,18 +191,20 @@ class analyze_gift():
 
     def light(self):
         ## 希望之光,最有可能获得惊喜的人
-        light_of_hope="select fan_name,(10000-total)::int from (select fan_name,sum(sound_wave) as total from gift_list group by 1)t where total>5000 and total<10000;"
+        light_of_hope="select fan_name,(10000-total)::int from (select fan_name,sum(sound_wave) as total from gift_list group by 1 order by 2 desc)t where total>3000 and total<10000 ;"
         error_code,results=self.db.execute_select_sql(light_of_hope)
         output = {}
         if not error_code:
             list_str = ''
-            for i in range(len(results)):
-                if i < len(results)-1:
-                    print(11111)
-                    list_str=list_str + results[i][0] + '仅需增加音浪' + str(results[i][1]) + '即有机会获得惊喜！\n\t'
-                else:
-                    list_str = list_str + results[i][0] + '仅需增加音浪' + str(results[i][1]) + '即有机会获得惊喜！\n'
-            output['light_of_hope'] = '本日粉丝中的希望之星：\n\t' + list_str
+            if len(results)==0:
+                list_str='很遗憾!暂无总音浪数超过3000并且小于10000的星仔。'
+            else:
+                for i in range(len(results)):
+                    if i < len(results)-1:
+                        list_str=list_str + results[i][0] + '仅需增加音浪' + str(results[i][1]) + '即有机会获得惊喜！\n\t'
+                    else:
+                        list_str = list_str + results[i][0] + '仅需增加音浪' + str(results[i][1]) + '即有机会获得惊喜！\n'
+            output['light_of_hope'] = '本日粉丝中的希望之星(总票数3000+)：\n\t' + list_str
             return error_code,output['light_of_hope']
         else:
             return error_code,results
@@ -252,4 +254,10 @@ if __name__ == '__main__':
 
 备注：音浪统计开始时间为2020-04-08，每日累计。每天统计送音浪最多的5个人的记录。
      送出音浪累计超过1W可以获得七七送出的惊喜！ 如有疑问，请咨询粉丝团管理。
+     
+    记录规则：
+    当前记录的是每天前榜五，所以理论上每天只登记5个人的记录，
+    超过5条记录一般有两种情况：
+        1. 大家刷的票数超过1000
+        2. 小兔断播了，每开一场都会记录前榜五
     '''.format(today,sound_wave_1ws_count_list,light_of_hope,total_people,yesterday, yesterday_people,yesterday_people_list,sound_wave_top5) )
